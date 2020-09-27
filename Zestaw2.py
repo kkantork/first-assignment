@@ -21,26 +21,27 @@ schema_df = pd.read_csv('survey_results_schema.csv')
 
 pd.set_option('display.max_columns', 85)
 
-df_reg = pd.read_csv('survey_results_public.csv', usecols = ['CompTotal', 'ConvertedComp', 'WorkWeekHrs', 'CodeRevHrs', 'Age', 'YearsCode', 'Age1stCode', 'YearsCodePro'])
+df_reg = pd.read_csv('survey_results_public.csv', usecols = ['Age', 'YearsCode', 'YearsCodePro', 'Employment', 'Hobbyist'])
 
 df_reg.dropna(inplace = True)
 
-column_values = df_reg[['Age1stCode']].values.ravel()
+column_values = df_reg[['YearsCodePro']].values.ravel()
 unique_values = pd.unique(column_values)
 print(unique_values)
-
-df_reg.replace(to_replace='Younger than 5 years', value='4', inplace=True)
-df_reg.replace(to_replace='Older than 85', value='86', inplace=True)
 
 column_values = df_reg[['YearsCode']].values
 unique_values = np.unique(column_values)
 print(unique_values)
 
 df_reg.replace(to_replace={'Less than 1 year': '0',
-                              'More than 50 years': '1'},
+                              'More than 50 years': '51'},
                   inplace=True)
 
-df_reg = df_reg.astype('float64', copy=False)
+df_reg = df_reg.astype({'YearsCodePro': 'int64', 'YearsCode': 'int64'} , copy=False)
+#df_reg = df_reg.astype('float64', copy=False)
+print(df_reg['YearsCode'])
+print(df_reg['YearsCodePro'])
+
 
 print(df_reg.corr())
 
