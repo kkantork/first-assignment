@@ -13,6 +13,7 @@ import seaborn as sns
 import numpy as np
 from sklearn import linear_model
 from scipy import stats
+from sklearn.preprocessing import LabelBinarizer
 
 df = pd.read_csv('survey_results_public.csv')
 schema_df = pd.read_csv('survey_results_schema.csv')
@@ -37,10 +38,18 @@ df_reg.replace(to_replace={'Less than 1 year': '0',
                               'More than 50 years': '51'},
                   inplace=True)
 
+df_reg.replace(to_replace={'No': '0',
+                              'Yes': '1'},
+                  inplace=True)
+
 df_reg = df_reg.astype({'YearsCodePro': 'int64', 'YearsCode': 'int64'} , copy=False)
 #df_reg = df_reg.astype('float64', copy=False)
 print(df_reg['YearsCode'])
 print(df_reg['YearsCodePro'])
+print(df_reg['Hobbyist'])
+
+Empl = LabelBinarizer().fit_transform(df_reg.Employment)
+print(Empl)
 
 
 print(df_reg.corr())
