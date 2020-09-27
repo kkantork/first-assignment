@@ -49,7 +49,7 @@ plt.ylabel('YearsCodePro')
 plt.xlabel('Age')
 plt.plot(df_reg['YearsCodePro'], df_reg['YearsCode'],'ro', markersize=0.3, color = 'blue')
 plt.ylabel('YearsCodePro')
-plt.xlabel('YearsCode')
+plt.xlabel('YearsCode/Age')
 plt.show()
 
 print(df_reg.dtypes)
