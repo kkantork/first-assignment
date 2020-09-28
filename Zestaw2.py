@@ -22,10 +22,15 @@ schema_df = pd.read_csv('survey_results_schema.csv')
 
 pd.set_option('display.max_columns', 85)
 
-df_reg = pd.read_csv('survey_results_public.csv', usecols = ['Age', 'YearsCode', 'YearsCodePro', 'Employment', 'Hobbyist'])
-
+#Selecting columns from survey
+df_reg = pd.read_csv('survey_results_public.csv', usecols = ['Age', 'YearsCode', 'YearsCodePro'])
+df_reg2 = pd.read_csv('survey_results_public.csv', usecols = ['Age', 'YearsCode', 'YearsCodePro', 'Employment', 'Hobbyist'])
+#Removing rows without values
 df_reg.dropna(inplace = True)
+df_reg2.dropna(inplace = True)
 
+
+#Verifying all values are numerical
 column_values = df_reg[['YearsCodePro']].values.ravel()
 unique_values = pd.unique(column_values)
 print(unique_values)
@@ -34,39 +39,106 @@ column_values = df_reg[['YearsCode']].values
 unique_values = np.unique(column_values)
 print(unique_values)
 
+
+#replacing string to int values
 df_reg.replace(to_replace={'Less than 1 year': '0',
                               'More than 50 years': '51'},
                   inplace=True)
 
-df_reg.replace(to_replace={'No': '0',
+df_reg2.replace(to_replace={'Less than 1 year': '0',
+                              'More than 50 years': '51'},
+                  inplace=True)
+
+#replacing Yes/No to numerical values
+df_reg2.replace(to_replace={'No': '0',
                               'Yes': '1'},
                   inplace=True)
 
+#setting appropriate data types
 df_reg = df_reg.astype({'YearsCodePro': 'int64', 'YearsCode': 'int64'} , copy=False)
 #df_reg = df_reg.astype('float64', copy=False)
 print(df_reg['YearsCode'])
 print(df_reg['YearsCodePro'])
-print(df_reg['Hobbyist'])
+print(df_reg2['Hobbyist'])
 
-Empl = LabelBinarizer().fit_transform(df_reg.Employment)
+#hot encoding for Employment column
+Empl = LabelBinarizer().fit_transform(df_reg2.Employment)
 print(Empl)
 
-
+#Verifying correlation
 print(df_reg.corr())
 
-plt.plot(df_reg['YearsCodePro'], df_reg['Age'],'ro', markersize=0.3)
-plt.ylabel('YearsCodePro')
-plt.xlabel('Age')
-plt.plot(df_reg['YearsCodePro'], df_reg['Hobbyist'],'ro', markersize=0.3, color = 'green')
-plt.ylabel('YearsCodePro')
-plt.xlabel('Hobbyist')
-plt.plot(df_reg['YearsCodePro'], Empl,'ro', markersize=0.3, color = 'yellow')
-plt.ylabel('YearsCodePro')
-plt.xlabel(Empl)
-plt.plot(df_reg['YearsCodePro'], df_reg['YearsCode'],'ro', markersize=0.3, color = 'blue')
-plt.ylabel('YearsCodePro')
-plt.xlabel('YearsCode/Age')
-plt.show()
+
+#plots
+# plt.plot(df_reg['YearsCodePro'], df_reg['Age'],'ro', markersize=0.3)
+# plt.ylabel('YearsCodePro')
+# plt.xlabel('Age')
+# plt.plot(df_reg['YearsCodePro'], df_reg['Hobbyist'],'ro', markersize=0.3, color = 'green')
+# plt.ylabel('YearsCodePro')
+# plt.xlabel('Hobbyist')
+# plt.plot(df_reg['YearsCodePro'], Empl,'ro', markersize=0.3, color = 'yellow')
+# plt.ylabel('YearsCodePro')
+# plt.xlabel(Empl)
+# plt.plot(df_reg['YearsCodePro'], df_reg['YearsCode'],'ro', markersize=0.3, color = 'blue')
+# plt.ylabel('YearsCodePro')
+# plt.xlabel('YearsCode/Age')
+# plt.show()
 
 print(df_reg.dtypes)
+
+#Looking for outliers
+
+sns.boxplot(y='YearsCodePro', data=df_reg)
+plt.show();
+sns.boxplot(y='YearsCode', data=df_reg)
+plt.show();
+sns.boxplot(y='Age', data=df_reg)
+plt.show();
+
+fig, ax = plt.subplots(figsize=(16,8))
+ax.scatter(df_reg['YearsCode'], df_reg['YearsCodePro'])
+ax.set_xlabel('YearsCode')
+ax.set_ylabel('YearsCodePro')
+plt.show()
+
+fig, ax = plt.subplots(figsize=(16,8))
+ax.scatter(df_reg['Age'], df_reg['YearsCodePro'])
+ax.set_xlabel('Age')
+ax.set_ylabel('YearsCodePro')
+plt.show()
+
+#z-score with absolute value
+z = np.abs(stats.zscore(df_reg))
+print(z)
+
+#looking at outliers (>3)
+threshold = 3
+print(np.where(z > 3))
+
+#keeping values within 3 standard deviations
+df_reg_sd = df_reg[np.abs(df_reg - df_reg.mean()) <= 3*df_reg.std()]
+
+sns.boxplot(y='YearsCodePro', data=df_reg_sd)
+plt.show();
+df_reg_sd.plot()
+plt.show();
+
+print(df_reg_sd.corr())
+
+#interquartile range (IQR)/middle 50%
+
+Q1 = df_reg.quantile(0.25)
+Q3 = df_reg.quantile(0.75)
+IQR = Q3 - Q1
+
+df_reg_q = df_reg[~((df_reg < (Q1 - 1.5 * IQR)) | (df_reg > (Q3 + 1.5 * IQR))).any(axis=1)]
+
+sns.boxplot(y='YearsCodePro', data=df_reg_q)
+plt.show();
+df_reg_q.plot()
+plt.show();
+
+print(df_reg_q.corr())
+
+
 
