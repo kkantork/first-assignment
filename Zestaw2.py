@@ -150,7 +150,14 @@ print(df_reg_q.corr())
 reg = linear_model.LinearRegression()
 reg.fit(df_reg[['YearsCode']], df_reg['YearsCodePro']);
 
-print(reg.predict([[10]]))
+print("predicted values for one variable")
+print(reg.predict(df_reg[['YearsCode']]))
+
+y_pred1 = reg.predict(df_reg[['YearsCode']])
+y_true = df_reg['YearsCodePro']
+
+print("MSE for one variable:")
+print(mean_squared_error(y_true, y_pred1))
 
 
 
@@ -158,15 +165,16 @@ print(reg.predict([[10]]))
 reg2 = linear_model.LinearRegression()
 reg2.fit(df_reg[['YearsCode', 'Age']], df_reg['YearsCodePro']);
 
+print("coef:")
 print(reg2.coef_)
 
+print("Predicted values for two variables:")
 print(reg2.predict(df_reg[['YearsCode', 'Age']]))
 
 y_pred = reg2.predict(df_reg[['YearsCode', 'Age']])
 y_true = df_reg['YearsCodePro']
 
-print(y_true)
-print(y_pred)
+print("MSE for two variables:")
 print(mean_squared_error(y_true, y_pred))
 
 
