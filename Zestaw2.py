@@ -48,6 +48,17 @@ sns.boxplot(y='YearsCodePro', data=df_reg).set(
                               ylabel='YearsCodePro - outliers included')
 plt.show()
 
+# plot
+plt.plot(df_reg['YearsCodePro'], df_reg['Age'], 'ro', markersize=0.3)
+plt.ylabel('YearsCodePro')
+plt.xlabel('Age')
+plt.plot(df_reg['YearsCodePro'], df_reg['YearsCode'], 'ro',
+         markersize=0.3, color='blue')
+plt.ylabel('YearsCodePro - outliers included')
+plt.xlabel('YearsCode/Age')
+plt.show()
+
+
 # interquartile range (IQR)/middle 50%
 
 Q1 = df_reg.quantile(0.25)
@@ -61,6 +72,17 @@ df_reg_q = df_reg[~((df_reg < (Q1 - 1.5 * IQR)) |
 sns.boxplot(y='YearsCodePro', data=df_reg_q).set(
                               ylabel='YearsCodePro - no outliers')
 plt.show()
+
+# plot
+plt.plot(df_reg_q['YearsCodePro'], df_reg_q['Age'], 'ro', markersize=0.3)
+plt.ylabel('YearsCodePro')
+plt.xlabel('Age')
+plt.plot(df_reg_q['YearsCodePro'], df_reg_q['YearsCode'], 'ro',
+         markersize=0.3, color='blue')
+plt.ylabel('YearsCodePro - no outliers')
+plt.xlabel('YearsCode/Age')
+plt.show()
+
 
 print()
 print("Correlation without outliers")
