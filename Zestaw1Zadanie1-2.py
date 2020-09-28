@@ -9,39 +9,33 @@ import csv
 import pandas as pd
 import numpy as np
 
+# read tsv file and calculate the price mean
 df = pd.read_csv("./train.tsv", sep='\t')
-df1 = str(round(df.iloc[:, 0].mean(),0)# f = open("out0.csv", "x")
+df1 = str(round(df.iloc[:, 0].mean(), 0))
 
-# with open("out0.csv", 'w', newline='') as f:
-#     f.write(df1)
-)
+# write the output to file
+with open("out0.csv", 'w', newline='') as f:
+    f.write(df1)
 
-# f = open("out0.csv", "x")
 
-# with open("out0.csv", 'w', newline='') as f:
-#     f.write(df1)
-
-#adding a new column for price per m2 calculation
+# adding a new column for price per m2 calculation
 df[len(df.columns)] = 6
 
-#price per m2 calc
-df.iloc[:,6] = df.iloc[:, 0] / df.iloc[:, 2]
+# price per m2 calc - each row
+df.iloc[:, 6] = df.iloc[:, 0] / df.iloc[:, 2]
 
-#srednia cena za metr2
-avg = df.iloc[:,6].mean()
+# avg price per m2 according to col
+avg = df.iloc[:, 6].mean()
 print(avg)
 
-df_col = df.iloc[:,[0, 1, 6]]
-#print(df_col)
-df_rows = df_col.loc[df.iloc[:,1]>=3]
+# selecting cols with rooms, price, price per m2
+df_col = df.iloc[:, [1, 0, 6]]
+
+# filtering data with rooms >=3 and price < avg
+df_rows = df_col.loc[df.iloc[:, 1] >= 3]
 print(df_rows)
-df_rows2 = df_rows.loc[df.iloc[:,6]<avg]
+df_rows2 = df_rows.loc[df.iloc[:, 6] < avg]
 print(df_rows2)
 
+# print out the results to file
 df_rows2.to_csv('out1.csv', sep='\t', index=False, float_format='%.3f')
-
-#df.to_csv('proba2.csv',columns=df.iloc[:,[0, 1, 6]], sep='\t', index=False, float_format='%.3f')
-
-
-
-# print(df)
