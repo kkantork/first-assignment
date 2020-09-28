@@ -57,6 +57,7 @@ plt.xlabel('WorkWeekHrs')
 plt.show()
 
 # preparing plot for non-hobbyists
+
 nonhobb = survey_df2[survey_df2['Hobbyist'] == 'No']
 
 nonhobb.dropna(inplace=True)
