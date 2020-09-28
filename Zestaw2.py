@@ -142,6 +142,8 @@ plt.show();
 df_reg_q.plot()
 plt.show();
 
+print()
+print("Correlation without outliers")
 print(df_reg_q.corr())
 
 #linear regression
@@ -150,12 +152,14 @@ print(df_reg_q.corr())
 reg = linear_model.LinearRegression()
 reg.fit(df_reg[['YearsCode']], df_reg['YearsCodePro']);
 
+print()
 print("predicted values for one variable")
 print(reg.predict(df_reg[['YearsCode']]))
 
 y_pred1 = reg.predict(df_reg[['YearsCode']])
 y_true = df_reg['YearsCodePro']
 
+print()
 print("MSE for one variable:")
 print(mean_squared_error(y_true, y_pred1))
 
@@ -168,14 +172,51 @@ reg2.fit(df_reg[['YearsCode', 'Age']], df_reg['YearsCodePro']);
 print("coef:")
 print(reg2.coef_)
 
+print()
 print("Predicted values for two variables:")
 print(reg2.predict(df_reg[['YearsCode', 'Age']]))
 
 y_pred = reg2.predict(df_reg[['YearsCode', 'Age']])
 y_true = df_reg['YearsCodePro']
 
+print()
 print("MSE for two variables:")
 print(mean_squared_error(y_true, y_pred))
+
+#one variable without outliers
+reg_q = linear_model.LinearRegression()
+reg_q.fit(df_reg_q[['YearsCode']], df_reg_q['YearsCodePro']);
+
+print()
+print("Predicted values for one variable without outliers")
+print(reg_q.predict(df_reg_q[['YearsCode']]))
+
+y_pred1 = reg_q.predict(df_reg_q[['YearsCode']])
+y_true = df_reg_q['YearsCodePro']
+
+print()
+print("MSE for one variable without outliers:")
+print(mean_squared_error(y_true, y_pred1))
+
+#two variables without outliers
+reg2_q = linear_model.LinearRegression()
+reg2_q.fit(df_reg_q[['YearsCode', 'Age']], df_reg_q['YearsCodePro']);
+
+print()
+print("coef:")
+print(reg2_q.coef_)
+
+print()
+print("Predicted values for two variables without outliers:")
+print(reg2_q.predict(df_reg_q[['YearsCode', 'Age']]))
+
+y_pred = reg2_q.predict(df_reg_q[['YearsCode', 'Age']])
+y_true = df_reg_q['YearsCodePro']
+
+print()
+print("MSE for two variables without outliers:")
+print(mean_squared_error(y_true, y_pred))
+
 
 
 # reg3 = linear_model.LinearRegression()
