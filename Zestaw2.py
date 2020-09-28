@@ -14,6 +14,7 @@ import numpy as np
 from sklearn import linear_model
 from scipy import stats
 from sklearn.preprocessing import LabelBinarizer
+from sklearn.metrics import mean_squared_error
 
 df = pd.read_csv('survey_results_public.csv')
 schema_df = pd.read_csv('survey_results_schema.csv')
@@ -61,9 +62,12 @@ print(df_reg['YearsCode'])
 print(df_reg['YearsCodePro'])
 print(df_reg2['Hobbyist'])
 
-#hot encoding for Employment column
+#one hot encoding for Employment column
 Empl = LabelBinarizer().fit_transform(df_reg2.Employment)
 print(Empl)
+
+# df_reg2 = pd.concat([df_reg2, pd.get_dummies(df_reg2['Employment'])])
+# print(df_reg2)
 
 #Verifying correlation
 print(df_reg.corr())
@@ -140,5 +144,35 @@ plt.show();
 
 print(df_reg_q.corr())
 
+#linear regression
+
+#one variable
+reg = linear_model.LinearRegression()
+reg.fit(df_reg[['YearsCode']], df_reg['YearsCodePro']);
+
+print(reg.predict([[10]]))
+
+
+
+#two variables
+reg2 = linear_model.LinearRegression()
+reg2.fit(df_reg[['YearsCode', 'Age']], df_reg['YearsCodePro']);
+
+print(reg2.coef_)
+
+print(reg2.predict(df_reg[['YearsCode', 'Age']]))
+
+y_pred = reg2.predict(df_reg[['YearsCode', 'Age']])
+y_true = df_reg['YearsCodePro']
+
+print(y_true)
+print(y_pred)
+print(mean_squared_error(y_true, y_pred))
+
+
+# reg3 = linear_model.LinearRegression()
+# reg3.fit(df_reg2[['YearsCode', 'Age', 'Hobbyist', 'Employment']], df_reg2['YearsCodePro']);
+
+# print(reg3.predict(df_reg2[['YearsCode', 'Age', 'Hobbyist', 'Employment']]))
 
 
